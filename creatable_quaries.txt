@@ -1,0 +1,31 @@
+CREATE TABLE faculty (
+    fid int PRIMARY KEY,
+    name varchar(255) NOT NULL,
+    department varchar(255) NOT NULL,
+    phone_number varchar(30) NOT NULL,
+    designation varchar(30) NOT NULL,
+    CONSTRAINT chk_designation_value CHECK (designation='Teaching' OR designation='Non-Teaching'),
+    duties int DEFAULT '0'
+);
+
+CREATE TABLE faculty_duty (
+    fid int,
+    day_of_exam DATE,
+    session varchar(10),
+    reliever varchar(10) DEFAULT 'False',
+    CONSTRAINT chk_session_value CHECK (session='AN' OR session='FN'),
+    CONSTRAINT chk_reliever_value CHECK (reliever='True' OR reliever='False'),
+    FOREIGN KEY(fid) REFERENCES faculty(fid) ON DELETE CASCADE
+);
+
+insert into faculty(name, department, phone_number) values
+('Sharath', 'ISE', '9087654321'),
+('Punith', 'ISE', '9087654321'),
+('Ramya', 'ISE', '9087654321'),
+('Krishna Prasad', 'MEC', '9087654321'),
+('victor', 'CSE', '9087654321');
+
+SELECT f.fid, f.name, f.department, f.duties
+FROM faculty f LEFT JOIN faculty_duty fd ON f.fid=fd.fid
+WHERE f.fid NOT IN
+(SELECT fd1.fid FROM faculty_duty fd1 WHERE fd1.day_of_exam='1998-09-19');
