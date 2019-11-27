@@ -43,11 +43,16 @@ include 'connection.php';
                 session = 'FN';
             if ((date_selected != null && date_selected.length != 0) && (session == 'AN' || session == 'FN')) { 
                 get_faculty_details(flag);
+                var day = new Date(date_selected);
+                sat = "";
+                if(day.getDay() == 6) {
+									var sat = "(Sat)"; 
+								}
                 document.getElementById("date_selected_input").value = date_selected;
                 document.getElementById("session_selected_input").value = session;
                 document.getElementById("faculties_selected_input").value = "";
 
-                document.getElementById("selected_session_value").innerHTML = date_selected + ' | ' + session;
+                document.getElementById("selected_session_value").innerHTML = date_selected + sat + ' | ' + session;
                 document.getElementById("before_select_session").style.display = 'none';
                 document.getElementById("after_select_session").style.display = 'block';
             } else {
@@ -205,7 +210,12 @@ include 'connection.php';
                     var l = duties.length-1;
                     var temp = '';
                     for(i=0;i<l;i++) {
-                        temp = temp + duties[i]['date'] + ' | ' + duties[i]['session'] + '\n';
+		                    var day = new Date(duties[i]['date']);
+		                    sat = "";
+		                    if(day.getDay() == 6) {
+													var sat = "(Sat)"; 
+												}
+                        temp = temp + duties[i]['date'] + ' | ' + duties[i]['session'] + " " + sat +'\n';
                     }
                     ele.title = temp;
                 }
@@ -215,7 +225,7 @@ include 'connection.php';
         }
 
         function get_a_faculty_details(fid) {
-            event.preventDefault();
+            //event.preventDefault();
             var res_text = '';
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
@@ -343,7 +353,7 @@ include 'connection.php';
                                                 ?>
                                                 <tr>
                                                     <td><?php echo ('<a onclick="get_a_faculty_details(\'' . $row[0] . '\')">' . $row[0] . '</a>'); ?></td>
-                                                    <td><?php echo ('<a class="btn btn-link" href="" onclick="get_a_faculty_details(\'' . $row[0] . '\')">' . $row[1] . '</a>'); ?></td>
+                                                    <td><?php echo ('<a class="btn btn-link" onclick="get_a_faculty_details(\'' . $row[0] . '\')">' . $row[1] . '</a>'); ?></td>
                                                     <td><?php echo ($row[2]); ?></td>
                                                     <td><?php echo ($row[3]); ?></td>
                                                     <td><?php echo ($row[4]); ?></td>
@@ -554,6 +564,7 @@ include 'connection.php';
                                 </div>
                                 <div class="col-auto">
                                     <a href='<?php echo("duties_of_the_day.php?date=$row[0]&session=$row[1]"); ?>' class="btn btn-outline-primary">Print</a>
+                                    <a href='<?php echo("delete_session.php?date=$row[0]&session=$row[1]"); ?>' class="btn btn-outline-danger ml-2">Delete</a>
                                 </div>
                             </div>
                         </div>
@@ -590,20 +601,23 @@ include 'connection.php';
                                                         <?php
                                                             $todays_date = date("Y-m-d");
                                                             if($todays_date==$row[0]) {
-                                                                $sql3 = "SELECT COUNT(*) FROM faculty_duty WHERE fid='$row1[0]' AND day_of_exam!='$todays_date' AND reliever='True';";
+                                                                $sql3 = "SELECT COUNT(*), day_of_exam FROM faculty_duty WHERE fid='$row1[0]' AND day_of_exam!='$todays_date' AND reliever='True';";
                                                                 $res3 = mysqli_query($conn, $sql3);
                                                                 $res3 = mysqli_fetch_array($res3);
                                                                 $count_res3 = $res3[0];
-                                                                if($count_res3==0) {
                                                         ?>
                                                         <td>
                                                             <div class="custom-control custom-checkbox">
                                                                 <input type="checkbox" onclick="reliever(this, '<?php echo($row1[0]) ?>', '<?php echo($row[0]) ?>')" class="custom-control-input" id="<?php echo($checkbox_count); ?>" name="example1" <?php if($row1[4]=='True')echo('checked'); ?> >
-                                                                <label class="custom-control-label" for="<?php echo($checkbox_count++); ?>"> </label>
+                                                                <label class="custom-control-label" for="<?php echo($checkbox_count++); ?>">
+                                                                    <?php
+                                                                    if($count_res3!=0) {
+                                                                        echo("Relieved on $res3[1]");
+                                                                    }?>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <?php
-                                                                }
                                                             }
                                                         ?>
                                                     </tr>
@@ -691,7 +705,7 @@ include 'connection.php';
     <!-- The Faculty Adding File in Modal -->
     <form action="add_faculty.php" method="POST" enctype="multipart/form-data">
         <div class="modal" id="faculty_adding_file_modal">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
 
                     <!-- Modal Header -->
@@ -717,6 +731,7 @@ include 'connection.php';
                                     <th>B</th>
                                     <th>C</th>
                                     <th>D</th>
+                                    <th>E</th>
                                 </tr>
                                 <tr>
                                     <th>1</th>
@@ -724,6 +739,7 @@ include 'connection.php';
                                     <td>Name</td>
                                     <td>Department</td>
                                     <td>Phone Number</td>
+                                    <td>Designation</td>
                                 </tr>
                                 <tr>
                                     <th>2</th>
@@ -731,6 +747,7 @@ include 'connection.php';
                                     <td>XYZ</td>
                                     <td>ISE</td>
                                     <td>1234567890</td>
+                                    <td>Teaching</td>
                                 </tr>
                             </table>
                         </div>
