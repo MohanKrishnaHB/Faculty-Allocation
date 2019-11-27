@@ -609,10 +609,12 @@ include 'connection.php';
                                                         <td>
                                                             <div class="custom-control custom-checkbox">
                                                                 <input type="checkbox" onclick="reliever(this, '<?php echo($row1[0]) ?>', '<?php echo($row[0]) ?>')" class="custom-control-input" id="<?php echo($checkbox_count); ?>" name="example1" <?php if($row1[4]=='True')echo('checked'); ?> >
-                                                                <label class="custom-control-label" for="<?php echo($checkbox_count++); ?>"> <?php
-                                                                if($count_res3!=0) {
-                                                        					echo("Relieved on $res3[1]");
-                                                                }?></label>
+                                                                <label class="custom-control-label" for="<?php echo($checkbox_count++); ?>">
+                                                                    <?php
+                                                                    if($count_res3!=0) {
+                                                                        echo("Relieved on $res3[1]");
+                                                                    }?>
+                                                                </label>
                                                             </div>
                                                         </td>
                                                         <?php
