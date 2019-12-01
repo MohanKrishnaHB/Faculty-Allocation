@@ -18,14 +18,5 @@ CREATE TABLE faculty_duty (
     FOREIGN KEY(fid) REFERENCES faculty(fid) ON DELETE CASCADE
 );
 
-insert into faculty(name, department, phone_number) values
-('Sharath', 'ISE', '9087654321'),
-('Punith', 'ISE', '9087654321'),
-('Ramya', 'ISE', '9087654321'),
-('Krishna Prasad', 'MEC', '9087654321'),
-('victor', 'CSE', '9087654321');
-
-SELECT f.fid, f.name, f.department, f.duties
-FROM faculty f LEFT JOIN faculty_duty fd ON f.fid=fd.fid
-WHERE f.fid NOT IN
-(SELECT fd1.fid FROM faculty_duty fd1 WHERE fd1.day_of_exam='1998-09-19');
+CREATE TABLE user(username VARCHAR(40), password VARCHAR(20));
+INSERT INTO user VALUES('admin', 'admin');
