@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!isset($_SESSION['username'])) {
+    header('Location: /faculty_allocation/log_in.php');
+}
 include 'connection.php';
 ?>
 <!DOCTYPE html>
@@ -303,6 +307,9 @@ include 'connection.php';
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#view_alloted">View Alloted</a>
+            </li>
+            <li class="nav-item ml-auto">
+                <a class="nav-link" href="log_out.php">LOG-OUT</a>
             </li>
         </ul>
 
